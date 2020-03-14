@@ -42,19 +42,11 @@ wss.on('connection', function connection(ws) {
 
                 LeagueAPI.getSummonerByName(name)
                     .then(async function (accountObject) {
-
                         return await LeagueAPI.getActiveGames(accountObject);
+
                     }).catch()
                     .then(function (activeGames) {
-
-                        let mes = new Discord.RichEmbed();
-                        mes.setTitle('LEAGUE GAME');
-
-                        for (var x = 0; x < activeGames.participants.length; x++) {
-                            let Link = '[' + activeGames.participants[x].summonerName + '](' + 'https://euw.op.gg/summoner/userName=' + activeGames.participants[x].summonerName.replace(/ /g, '_') + ')';
-                            mes.addField(getChamp(activeGames.participants[x].championId), Link);
-                        }
-                        ws.send(JSON.stringify(mes));
+                        ws.send(JSON.stringify(activeGames));
                     })
                     .catch(error => {
                         ws.send('ERROR');
@@ -64,77 +56,25 @@ wss.on('connection', function connection(ws) {
                 break;
 
             case 'osuAPI':
+
+                name = getosuName(message);
+
                 switch (contentArgs[1]) {
 
                     case 'plays':
-                        
-                        name = getosuName(message);
-
-                        osuAPI.getUserBest({ u: name }).then(scores => {
-                            var emb = new Discord.RichEmbed()
-                                .setTitle(name + '`s Top 5 Plays');
-                            for (let index = 0; index < 5; index++) {
-                                let Link = '[' + [scores[index].beatmap.title] + '](https://osu.ppy.sh/beatmapsets/' + scores[index].beatmap.beatmapSetId + '#osu/' + scores[index].beatmap.id + ')';
-                                let n = index + 1;
-                                emb.addField('#' + n,
-                                    Link.concat("\nAcc: ").concat(scores[index].accuracy * 100).concat("\nPP: ").concat(scores[index].pp));
-                            }
-                            ws.send(JSON.stringify(emb));
-                        }).catch((error) => {
-                            ws.send('ERROR');
-                            console.log(error);
-                        });
+                        osuAPI.getUserBest({ u: name }).then(
+                            scores => {
+                                ws.send(JSON.stringify(scores));
+                            }).catch((error) => {
+                                ws.send('ERROR');
+                                console.log(error);
+                            });
                         break;
 
                     case 'recent':
-
-                        name = getosuName(message);
-
                         osuAPI.getUserRecent({ u: name }).then( //osuAPI-Call
                             result => {
-                                recentScore = result[0];
-
-                                let ObjectCount = Number.parseInt(recentScore.beatmap.objects.normal) +
-                                    Number.parseInt(recentScore.beatmap.objects.slider) +
-                                    Number.parseInt(recentScore.beatmap.objects.spinner);
-
-                                let ScoreCount = Number.parseInt(recentScore.counts["50"]) +
-                                    Number.parseInt(recentScore.counts["100"]) +
-                                    Number.parseInt(recentScore.counts["300"]) +
-                                    Number.parseInt(recentScore.counts["miss"]);
-
-                                let Acc = recentScore.accuracy * 100;
-                                let percentagePassed = (ScoreCount / ObjectCount) * 100;
-                                let parsedMods = parseMods(recentScore.mods);
-
-                                var emb = new Discord.RichEmbed()
-                                    .setTitle(recentScore.beatmap.artist + ' - ' + recentScore.beatmap.title)
-                                    .setURL('https://osu.ppy.sh/beatmapsets/' + recentScore.beatmap.beatmapSetId + '#osu/' + recentScore.beatmap.id)
-                                    .setColor('#0099ff')
-                                    .setFooter(recentScore.date)
-                                    .addField('Score', recentScore.score, true)
-                                    .addField('Combo', recentScore.maxCombo, true)
-                                    .addField('BPM', recentScore.beatmap.bpm, true)
-                                    .addField('Status', recentScore.beatmap.approvalStatus)
-                                    .addField('Difficulty', recentScore.beatmap.version, true)
-                                    .addField('StarRating', parseFloat(recentScore.beatmap.difficulty.rating).toFixed(2), true)
-
-                                if (!(parsedMods === "" || parsedMods == null)) {
-                                    emb.addField('Mods', parsedMods, true)
-                                }
-
-                                if (percentagePassed !== 100) {
-                                    emb.addField('Passed', percentagePassed.toFixed(2).concat("%"))
-                                } else {
-                                    emb.addBlankField()
-                                }
-
-                                emb.addField('Hits', recentScore.counts["300"].concat("EMOJI300 ")
-                                    .concat(recentScore.counts["100"]).concat("EMOJI100 ")
-                                    .concat(recentScore.counts["50"]).concat("EMOJI50 ")
-                                    .concat(recentScore.counts["miss"]).concat("EMOJI0 "))
-
-                                ws.send(JSON.stringify(emb));
+                                ws.send(JSON.stringify(result));
                             }
                         ).catch((error) => {
                             ws.send('ERROR');
@@ -158,7 +98,7 @@ function getChamp(ID) { //get Leaguechamp by ID
 
 function getleagueName(message) { //Gives back a NameString 
 
-    name = message.substring(message.indexOf(' ')+1);
+    name = message.substring(message.indexOf(' ') + 1);
 
     if (name == null) { //Hardcoded Names
         switch (message.author.username) {
@@ -185,8 +125,8 @@ function getleagueName(message) { //Gives back a NameString
 
 function getosuName(message) {       //Gives back a NameString 
 
-    name = message.substring(message.indexOf(' ')+1);
-    name = name.substring(name.indexOf(' ')+1);
+    name = message.substring(message.indexOf(' ') + 1);
+    name = name.substring(name.indexOf(' ') + 1);
 
     if (name == null) {   //Hardcoded Names
         switch (message.author.username) {
