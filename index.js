@@ -65,7 +65,9 @@ wss.on('connection', function connection(ws) {
 
             case 'osuAPI':
                 switch (contentArgs[1]) {
+
                     case 'plays':
+                        
                         name = getosuName(message);
 
                         osuAPI.getUserBest({ u: name }).then(scores => {
@@ -83,6 +85,7 @@ wss.on('connection', function connection(ws) {
                             console.log(error);
                         });
                         break;
+
                     case 'recent':
 
                         name = getosuName(message);
@@ -155,9 +158,9 @@ function getChamp(ID) { //get Leaguechamp by ID
 
 function getleagueName(message) { //Gives back a NameString 
 
-    let contentArgs = message.content.split(" ");
+    name = message.substring(message.indexOf(' ')+1);
 
-    if (contentArgs[1] == null) { //Hardcoded Names
+    if (name == null) { //Hardcoded Names
         switch (message.author.username) {
 
             case "ackhack": //Discordname
@@ -176,15 +179,16 @@ function getleagueName(message) { //Gives back a NameString
                 return "No User given";
         }
     } else {
-        return message.content.substring(contentArgs[0].length + 1);  //When Name given
+        return name;  //When Name given
     }
 }
 
 function getosuName(message) {       //Gives back a NameString 
 
-    let contentArgs = message.content.split(" ");
+    name = message.substring(message.indexOf(' ')+1);
+    name = name.substring(name.indexOf(' ')+1);
 
-    if (contentArgs[1] == null) {   //Hardcoded Names
+    if (name == null) {   //Hardcoded Names
         switch (message.author.username) {
 
             case "ackhack":         //Discordname
@@ -204,7 +208,7 @@ function getosuName(message) {       //Gives back a NameString
         }
     }
     else {
-        return message.content.substring(contentArgs[0].length + 1);  //When Name given
+        return name;  //When Name given
     }
 }
 
