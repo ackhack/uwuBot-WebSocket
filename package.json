@@ -1,0 +1,22 @@
+{
+  "name": "uwubot-websocket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ackhack/uwuBot-WebSocket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ackhack/uwuBot-WebSocket/issues"
+  },
+  "homepage": "https://github.com/ackhack/uwuBot-WebSocket#readme",
+  "dependencies": {
+    "ws": "^7.2.3"
+  }
+}
