@@ -10,10 +10,18 @@ const redditAPI = new snoowrap({
     username: apiKey.username,
     password: apiKey.password
 });
-const RiotAPIKey = require('../Dependencies/RiotAPIKey.json'); //Has RiotAPIKey under RiotAPIKey.key
-const champions = require('../Files/champions.json');
+const RiotAPIKey = require('./Dependencies/RiotAPIKey.json'); //Has RiotAPIKey under RiotAPIKey.key
+const champions = require('./Files/champions.json');
 let LeagueAPI = require('leagueapiwrapper');
 LeagueAPI = new LeagueAPI(RiotAPIKey.key, Region.EUW);
+const osu = require('node-osu');
+const osuAPIKey = require('./Dependencies/osuAPIKey.json'); //Has APIKey under osuAPIKEY.key
+const osuAPI = new osu.Api(osuAPIKey.key, {
+    // baseUrl: sets the base api url (default: https://osu.ppy.sh/api)
+    notFoundAsError: true, // Throw an error on not found instead of returning nothing. (default: true)
+    completeScores: true, // When fetching scores also fetch the beatmap they are for (Allows getting accuracy) (default: false)
+    parseNumeric: false // Parse numeric values into numbers/floats, excluding ids
+});
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
