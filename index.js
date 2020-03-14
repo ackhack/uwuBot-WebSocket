@@ -36,7 +36,7 @@ wss.on('connection', function connection(ws) {
                 break;
 
             case 'LeagueAPI':
-                name = getleagueName(message);
+                name = message.substring(contentArgs[0].length+1);
 
                 LeagueAPI.getSummonerByName(name)
                     .then(async function (accountObject) {
@@ -102,31 +102,4 @@ function parseMods(mods) {
 
     result = result.substring(0, result.length - 1);
     return result;
-}
-
-function getleagueName(message) { //Gives back a NameString 
-
-    name = message.substring(message.indexOf(' ') + 1);
-
-    if (name == null) { //Hardcoded Names
-        switch (message.author.username) {
-
-            case "ackhack": //Discordname
-                return "ackhack"; //leaguename
-
-            case "Human Daniel":
-                return "Epicly Bad Gamer";
-
-            case "LeftDoge":
-                return "JohnTheVirtuoso";
-
-            case "HST_Tutorials":
-                return "HST KZSZ";
-
-            default:
-                return "No User given";
-        }
-    } else {
-        return name;  //When Name given
-    }
 }
