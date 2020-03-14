@@ -73,7 +73,7 @@ wss.on('connection', function connection(ws) {
                     case 'recent':
                         osuAPI.getUserRecent({ u: name }).then( //osuAPI-Call
                             result => {
-                                ws.send(JSON.stringify([result,parseMods(result[0].mods)],result[0].accuracy));
+                                ws.send(JSON.stringify([result,parseMods(result[0].mods),result[0].accuracy]));
                             }
                         ).catch((error) => {
                             ws.send('ERROR');
