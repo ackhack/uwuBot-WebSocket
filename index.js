@@ -63,7 +63,12 @@ wss.on('connection', function connection(ws) {
                     case 'plays':
                         osuAPI.getUserBest({ u: name }).then(
                             scores => {
-                                ws.send(JSON.stringify(scores));
+                                var AccArray = [];
+                                for (let s of scores) {
+                                    AccArray.push(s.accuracy);
+                                }
+
+                                ws.send(JSON.stringify([scores,AccArray]));
                             }).catch((error) => {
                                 ws.send('ERROR');
                                 console.log(error);
