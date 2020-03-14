@@ -73,7 +73,7 @@ wss.on('connection', function connection(ws) {
                     case 'recent':
                         osuAPI.getUserRecent({ u: name }).then( //osuAPI-Call
                             result => {
-                                ws.send(JSON.stringify(result));
+                                ws.send(JSON.stringify([result,parseMods(result[0].mods)]));
                             }
                         ).catch((error) => {
                             ws.send('ERROR');
@@ -85,6 +85,19 @@ wss.on('connection', function connection(ws) {
         }
     });
 });
+
+function parseMods(mods) {
+    let result = "";
+    for (let x = 0; x < mods.length; x++) {
+
+        if (mods[x] != 'FreeModAllowed' && mods[x] != 'ScoreIncreaseMods') {
+            result += mods[x] + ',';
+        }
+    }
+
+    result = result.substring(0, result.length - 1);
+    return result;
+}
 
 function getleagueName(message) { //Gives back a NameString 
 
