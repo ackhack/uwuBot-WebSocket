@@ -12,10 +12,12 @@ const redditAPI = new snoowrap({
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
+    console.log(message);
     let contentArgs = message.split(" "); //Split Message for simpler Access
     switch (contentArgs[0]) {
         case 'Reddit':
             redditAPI.getSubreddit(contentArgs[1]).getRandomSubmission().then(submission => {
+                console.log(submission);
 
                 ws.send(JSON.stringify(submission));
 
