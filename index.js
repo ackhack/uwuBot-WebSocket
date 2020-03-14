@@ -1,6 +1,5 @@
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 60001 });
-const Discord = require('discord.js');
 const snoowrap = require('snoowrap');
 const apiKey = require('./Dependencies/RedditAPI.json');
 const redditAPI = new snoowrap({
@@ -11,7 +10,6 @@ const redditAPI = new snoowrap({
     password: apiKey.password
 });
 const RiotAPIKey = require('./Dependencies/RiotAPIKey.json'); //Has RiotAPIKey under RiotAPIKey.key
-const champions = require('./Files/champions.json');
 let LeagueAPI = require('leagueapiwrapper');
 LeagueAPI = new LeagueAPI(RiotAPIKey.key, Region.EUW);
 const osu = require('node-osu');
@@ -86,15 +84,6 @@ wss.on('connection', function connection(ws) {
         }
     });
 });
-
-function getChamp(ID) { //get Leaguechamp by ID
-    for (var champ in champions.data) {
-        c = champions.data[champ];
-        if (c.key == ID) {
-            return c.id;
-        }
-    }
-}
 
 function getleagueName(message) { //Gives back a NameString 
 
