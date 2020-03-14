@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ackhack/uwuBot-WebSocket#readme",
   "dependencies": {
+    "discord.js": "^12.0.2",
     "leagueapiwrapper": "^1.1.0",
     "node-osu": "^2.2.0",
     "snoowrap": "^1.21.0",
