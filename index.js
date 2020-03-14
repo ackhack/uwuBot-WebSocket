@@ -55,7 +55,8 @@ wss.on('connection', function connection(ws) {
 
             case 'osuAPI':
 
-                name = getosuName(message);
+            name = message.substring(message.indexOf(' ')+1);
+            name = name.substring(name.indexOf(' ')+1);
 
                 switch (contentArgs[1]) {
 
@@ -110,46 +111,4 @@ function getleagueName(message) { //Gives back a NameString
     } else {
         return name;  //When Name given
     }
-}
-
-function getosuName(message) {       //Gives back a NameString 
-
-    name = message.substring(message.indexOf(' ') + 1);
-    name = name.substring(name.indexOf(' ') + 1);
-
-    if (name == null) {   //Hardcoded Names
-        switch (message.author.username) {
-
-            case "ackhack":         //Discordname
-                return "ackh4ck";   //osuname
-
-            case "Human Daniel":
-                return "Human Daniel";
-
-            case "DragonHunter428":
-                return "DH428";
-
-            case 'Yalina':
-                return 'IIAleII';
-
-            default:
-                return "No User given";
-        }
-    }
-    else {
-        return name;  //When Name given
-    }
-}
-
-function parseMods(mods) {
-    let result = "";
-    for (let x = 0; x < mods.length; x++) {
-
-        if (mods[x] != 'FreeModAllowed' && mods[x] != 'ScoreIncreaseMods') {
-            result += mods[x] + ',';
-        }
-    }
-
-    result = result.substring(0, result.length - 1);
-    return result;
 }
