@@ -36,7 +36,7 @@ wss.on('connection', function connection(ws) {
                 break;
 
             case 'LeagueAPI':
-                name = message.substring(contentArgs[0].length+1);
+                name = message.substring(contentArgs[0].length + 1);
 
                 LeagueAPI.getSummonerByName(name)
                     .then(async function (accountObject) {
@@ -55,8 +55,8 @@ wss.on('connection', function connection(ws) {
 
             case 'osuAPI':
 
-            name = message.substring(message.indexOf(' ')+1);
-            name = name.substring(name.indexOf(' ')+1);
+                name = message.substring(message.indexOf(' ') + 1);
+                name = name.substring(name.indexOf(' ') + 1);
 
                 switch (contentArgs[1]) {
 
@@ -68,7 +68,7 @@ wss.on('connection', function connection(ws) {
                                     AccArray.push(s.accuracy);
                                 }
 
-                                ws.send(JSON.stringify([scores,AccArray]));
+                                ws.send(JSON.stringify([scores, AccArray]));
                             }).catch((error) => {
                                 ws.send('ERROR');
                                 console.log(error);
@@ -78,7 +78,7 @@ wss.on('connection', function connection(ws) {
                     case 'recent':
                         osuAPI.getUserRecent({ u: name }).then( //osuAPI-Call
                             result => {
-                                ws.send(JSON.stringify([result[0],parseMods(result[0].mods),result[0].accuracy]));
+                                ws.send(JSON.stringify([result[0], parseMods(result[0].mods), result[0].accuracy]));
                             }
                         ).catch((error) => {
                             ws.send('ERROR');
@@ -88,6 +88,7 @@ wss.on('connection', function connection(ws) {
                 }
                 break;
         }
+        wss.close(() => {});
     });
 });
 
