@@ -88,7 +88,6 @@ wss.on('connection', function connection(ws) {
                 }
                 break;
         }
-        wss.close(() => {});
     });
 });
 
