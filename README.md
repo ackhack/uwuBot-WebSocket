@@ -1,2 +1,2 @@
 node modules:
-node-osu leagueapiwrapper snoowrap discord.js
+node-osu leagueapiwrapper snoowrap discord.js require-dir
