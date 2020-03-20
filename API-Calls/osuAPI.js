@@ -10,7 +10,7 @@ const osuAPI = new osu.Api(osuAPIKey.key, {
 module.exports = {
     osuAPI: function (ws, args) {
 
-        let contentArgs = message.split(" "); //Split Message for simpler Access
+        let contentArgs = args.split(" "); //Split Message for simpler Access
         let name = args.substring(args.indexOf(' ') + 1);
         name = name.substring(name.indexOf(' ') + 1);
 
