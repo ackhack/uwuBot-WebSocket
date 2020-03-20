@@ -1,10 +1,10 @@
-const RiotAPIKey = require('./Dependencies/RiotAPIKey.json'); //Has RiotAPIKey under RiotAPIKey.key
+const RiotAPIKey = require('../Dependencies/RiotAPIKey.json'); //Has RiotAPIKey under RiotAPIKey.key
 let LeagueAPI = require('leagueapiwrapper');
 LeagueAPI = new LeagueAPI(RiotAPIKey.key, Region.EUW);
 
 module.exports = {
     LeagueAPI: function (ws, args) {
-        
+
         name = args.substring(10);
 
         LeagueAPI.getSummonerByName(name)

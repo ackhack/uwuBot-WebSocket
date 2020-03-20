@@ -1,5 +1,5 @@
 const osu = require('node-osu');
-const osuAPIKey = require('./Dependencies/osuAPIKey.json'); //Has APIKey under osuAPIKEY.key
+const osuAPIKey = require('../Dependencies/osuAPIKey.json'); //Has APIKey under osuAPIKEY.key
 const osuAPI = new osu.Api(osuAPIKey.key, {
     // baseUrl: sets the base api url (default: https://osu.ppy.sh/api)
     notFoundAsError: true, // Throw an error on not found instead of returning nothing. (default: true)
