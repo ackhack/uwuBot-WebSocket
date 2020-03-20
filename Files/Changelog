@@ -1,3 +1,6 @@
+2.0.0: 20.03.2020
+    -Moved from leagueapiwrapper to twisted for RiotAPI
+
 1.1.0: 20.03.2020
     -Refractored API-Calls into own Files
 
