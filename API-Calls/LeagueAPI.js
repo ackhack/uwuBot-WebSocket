@@ -6,6 +6,7 @@ const api = new twisted.LolApi({
     concurrency: undefined,
     key: RiotAPIKey.key,
 });
+var SavedGames = [];
 
 class Player {
     constructor(name,champion,rank,playerlevel) {
@@ -22,6 +23,15 @@ module.exports = {
         let user = await api.Summoner.getByName(args.substring(args.indexOf(' ')), 'EUW1');
 
         let currentMatch = await api.Spectator.activeGame(user.response.id, 'EUW1');
+
+        console.log(currentMatch);
+
+        if (SavedGames.includes(currentMatch.response.gameId)) {
+            ws.send('ERROR');
+            return;
+        }
+        
+        SavedGames.push(currentMatch.response.gameId);
 
         let Players = [];
 
