@@ -43,6 +43,6 @@ module.exports = {
         
         SavedGames[currentMatch.response.gameId] = Players;
 
-        ws.send(Players);
+        ws.send([currentMatch.response.gameId,Players]);
     }
 }
