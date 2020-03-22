@@ -9,7 +9,7 @@ const api = new twisted.LolApi({
 var SavedGames = {};
 
 class Player {
-    constructor(name,champion,rank,playerlevel) {
+    constructor(name, champion, rank, playerlevel) {
         this.name = name;
         this.champion = champion;
         this.rank = rank;
@@ -22,27 +22,35 @@ module.exports = {
 
         let user = await api.Summoner.getByName(args.substring(args.indexOf(' ')), 'EUW1');
 
-        let currentMatch = await api.Spectator.activeGame(user.response.id, 'EUW1');
-
-        if (SavedGames[currentMatch.response.gameId] != undefined) {
-            ws.send(SavedGames[currentMatch.response.gameId]);
+        if (user.response == undefined) {
+            ws.send('ERROR');
             return;
         }
-        
+
+        let currentMatch = await api.Spectator.activeGame(user.response.id, 'EUW1');
+
+        if (currentMatch.response == undefined) {
+            ws.send('ERROR');
+            return;
+        }
+
         let Players = [];
 
-        for (let par of currentMatch.response.participants) {        
+        for (let par of currentMatch.response.participants) {
 
             let champ = twisted.Constants.Champions[par.championId];
-            let pl = await api.Summoner.getByName(par.summonerName,'EUW1');
-            let px = await api.League.bySummoner(par.summonerId,'EUW1');  
-            let rank = px.response[0].tier + ' ' + px.response[0].rank;
-                     
-            Players.push(new Player(par.summonerName,champ,rank,pl.response.summonerLevel))
+            let pl = await api.Summoner.getByName(par.summonerName, 'EUW1');
+            let px = await api.League.bySummoner(par.summonerId, 'EUW1');
+            var rank = 'Unranked';
+            if (px.response[0] != undefined) {
+                rank = px.response[0].tier + ' ' + px.response[0].rank;
+            }
+
+            Players.push(new Player(par.summonerName, champ, rank, pl.response.summonerLevel))
         }
-        
+
         SavedGames[currentMatch.response.gameId] = Players;
 
-        ws.send([currentMatch.response.gameId,Players]);
+        ws.send([currentMatch.response.gameId, Players]);
     }
 }
