@@ -55,6 +55,6 @@ module.exports = {
         answer[0] = currentMatch.response.gameId;
         answer[1] = Players;
 
-        ws.send(JSON.parse(answer));
+        ws.send(JSON.stringify(answer));
     }
 }
