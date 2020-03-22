@@ -51,6 +51,10 @@ module.exports = {
 
         SavedGames[currentMatch.response.gameId] = Players;
 
-        ws.send(JSON.parse([currentMatch.response.gameId, Players]));
+        let answer = [];
+        answer[0] = currentMatch.response.gameId;
+        answer[1] = Players;
+
+        ws.send(JSON.parse(answer));
     }
 }
