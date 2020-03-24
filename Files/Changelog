@@ -1,4 +1,8 @@
-2.1.1: 2203.2020
+2.1.2: 24.03.2020
+    -Fixed TwitchAPI
+    -Updated LeagueAPI
+
+2.1.1: 22.03.2020
     -Fixed LeagueAPI
 
 2.1.0: 22.03.2020

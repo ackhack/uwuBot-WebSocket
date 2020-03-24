@@ -39,14 +39,15 @@ module.exports = {
         for (let par of currentMatch.response.participants) {
 
             let champ = twisted.Constants.Champions[par.championId];
+            champ = champ.charAt(0) + champ.substring(1,champ.length).toLowerCase();
             let pl = await api.Summoner.getByName(par.summonerName, 'EUW1');
             let px = await api.League.bySummoner(par.summonerId, 'EUW1');
             var rank = 'Unranked';
             if (px.response[0] != undefined) {
-                rank = px.response[0].tier + ' ' + px.response[0].rank;
+                rank = px.response[0].tier.charAt(0) + px.response[0].tier.substring(1,px.response[0].tier.length).toLowerCase() + ' ' + px.response[0].rank;
             }
 
-            Players.push(new Player(par.summonerName, champ, rank, pl.response.summonerLevel))
+            Players.push(new Player(par.summonerName, champ, rank, 'lvl ' + pl.response.summonerLevel))
         }
 
         SavedGames[currentMatch.response.gameId] = Players;
