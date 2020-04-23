@@ -8,13 +8,11 @@ wss.on('connection', function connection(ws) {
         console.log(message);
 
         let contentArgs = message.split(" "); //Split Message for simpler Access
-        let command = contentArgs[0] + '.' + contentArgs[0];
         try {
-            commands[command][command](ws,message);
+            commands[contentArgs[0]][contentArgs[0]](ws,message);
         } catch (error) {
             console.log('Command was not Found: ');
             console.log(error);
         }
-
     });
 });
