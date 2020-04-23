@@ -17,10 +17,8 @@ module.exports = {
             ws.send(JSON.stringify(submission));
         }).catch(error => {
             
-            console.log(error);
-            console.log('\n');
-            
-            ws.send('ERROR: ' + error.body.reason ? error.body.reason : 'Unknown');
+            console.log(error.error.reason + '\n');          
+            ws.send('ERROR: ' + (error.error.reason ? error.error.reason : 'Unknown'));
         });
     }
 }
