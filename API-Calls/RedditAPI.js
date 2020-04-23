@@ -16,8 +16,11 @@ module.exports = {
         redditAPI.getSubreddit(contentArgs[1]).getRandomSubmission().then(submission => {
             ws.send(JSON.stringify(submission));
         }).catch(error => {
-            ws.send('ERROR');
+            
             console.log(error);
+            console.log('\n');
+            
+            ws.send('ERROR: ' + error.body.reason ? error.body.reason : 'Unknown');
         });
     }
 }
