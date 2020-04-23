@@ -20,7 +20,7 @@ class Player {
 module.exports = {
     LeagueAPI: async function (ws, args) {
 
-        let name = args.substring(args.indexOf(' '));
+        let name = args.substring(args.indexOf(' ')+1);
 
         let user = await api.Summoner.getByName(name, 'EUW1');
 
