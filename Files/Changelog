@@ -2,6 +2,7 @@
     -Moved version to package.json
     -Replaced executeFunctionByName with simpler Function
     -Added Reason to why RedditAPI fails
+    -Added name to LeagueAPI callback
 
 2.1.2: 24.03.2020
     -Fixed TwitchAPI

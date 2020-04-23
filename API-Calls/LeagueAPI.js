@@ -20,7 +20,9 @@ class Player {
 module.exports = {
     LeagueAPI: async function (ws, args) {
 
-        let user = await api.Summoner.getByName(args.substring(args.indexOf(' ')), 'EUW1');
+        let name = args.substring(args.indexOf(' '));
+
+        let user = await api.Summoner.getByName(name, 'EUW1');
 
         if (user.response == undefined) {
             ws.send('ERROR');
@@ -52,6 +54,6 @@ module.exports = {
 
         SavedGames[currentMatch.response.gameId] = Players;
 
-        ws.send(JSON.stringify([currentMatch.response.gameId,Players]));
+        ws.send(JSON.stringify([currentMatch.response.gameId,Players,name]));
     }
 }
