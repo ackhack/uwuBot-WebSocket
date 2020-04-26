@@ -1,3 +1,6 @@
+2.1.4: 26.04.2020
+    -Fixed Error in LeagueAPI
+
 2.1.3: 23.04.2020
     -Moved version to package.json
     -Replaced executeFunctionByName with simpler Function

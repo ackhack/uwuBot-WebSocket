@@ -22,17 +22,23 @@ module.exports = {
 
         let name = args.substring(args.indexOf(' ')+1);
 
-        let user = await api.Summoner.getByName(name, 'EUW1');
+        let user = await api.Summoner.getByName(name, 'EUW1').catch(error => {
+            ws.send('ERROR: Summoner not found');
+            return;
+        });
 
-        if (user.response == undefined) {
-            ws.send('ERROR');
+        if (!user.response) {
+            ws.send('ERROR: Summoner not found');
             return;
         }
 
-        let currentMatch = await api.Spectator.activeGame(user.response.id, 'EUW1');
+        let currentMatch = await api.Spectator.activeGame(user.response.id, 'EUW1').catch(error => {
+            ws.send('ERROR: No active Game');
+            return;
+        });
 
-        if (currentMatch.response == undefined) {
-            ws.send('ERROR');
+        if (!currentMatch.response) {
+            ws.send('ERROR: No active Game');
             return;
         }
 
@@ -42,8 +48,16 @@ module.exports = {
 
             let champ = twisted.Constants.Champions[par.championId];
             champ = champ.charAt(0) + champ.substring(1,champ.length).toLowerCase();
-            let pl = await api.Summoner.getByName(par.summonerName, 'EUW1');
-            let px = await api.League.bySummoner(par.summonerId, 'EUW1');
+
+            let pl = await api.Summoner.getByName(par.summonerName, 'EUW1').catch(error => {
+                ws.send('ERROR');
+                return;
+            });;
+            let px = await api.League.bySummoner(par.summonerId, 'EUW1').catch(error => {
+                ws.send('ERROR');
+                return;
+            });;
+
             var rank = 'Unranked';
             if (px.response[0] != undefined) {
                 rank = px.response[0].tier.charAt(0) + px.response[0].tier.substring(1,px.response[0].tier.length).toLowerCase() + ' ' + px.response[0].rank;
