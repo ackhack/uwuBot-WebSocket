@@ -47,7 +47,8 @@ module.exports = {
         for (let par of currentMatch.response.participants) {
 
             let champ = twisted.Constants.Champions[par.championId];
-            champ = champ.charAt(0) + champ.substring(1,champ.length).toLowerCase();
+            champ = champ.charAt(0) + champ.substring(1,champ.length).toLowerCase(); //First Letter UpperCase
+            champ = champ.replace(/_(.)/g,function (m) {return ' ' + m.charAt(1).toUpperCase()}); //Replace '_l' with ' L'
 
             let pl = await api.Summoner.getByName(par.summonerName, 'EUW1').catch(error => {
                 ws.send('ERROR');
