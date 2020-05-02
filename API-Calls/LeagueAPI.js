@@ -6,6 +6,8 @@ const api = new twisted.LolApi({
     concurrency: undefined,
     key: RiotAPIKey.key,
 });
+const gameModes = require('../Files/gameModes.json');
+const maps = require('../Files/maps.json');
 var SavedGames = {};
 
 class Player {
@@ -20,7 +22,7 @@ class Player {
 module.exports = {
     LeagueAPI: async function (ws, args) {
 
-        let name = args.substring(args.indexOf(' ')+1);
+        let name = args.substring(args.indexOf(' ') + 1);
 
         let user = await api.Summoner.getByName(name, 'EUW1').catch(error => {
             ws.send('ERROR: Summoner not found');
@@ -42,33 +44,55 @@ module.exports = {
             return;
         }
 
+        if (SavedGames[currentMatch.response.gameId]) { //Skip API-Calls below if game is already saved
+            ws.send(JSON.stringify(SavedGames[currentMatch.response.gameId]));
+        }
+
+        let gameInfo = '';
+        if (currentMatch.response.gameMode == 'CLASSIC') {
+            gameInfo = 'Normal or Ranked Game on ';
+        } else {
+            gameInfo = gameInfo.concat(gameModes.find(mode => mode.gameMode == currentMatch.response.gameMode)).concat(' on ');
+        }
+
+        let map = maps.find(mode => mode.mapId == currentMatch.response.mapId);
+
+        gameInfo = gameInfo.concat(map['mapName'] + ' (' + map['notes'] + ')');
+
+
         let Players = [];
 
         for (let par of currentMatch.response.participants) {
 
             let champ = twisted.Constants.Champions[par.championId];
-            champ = champ.charAt(0) + champ.substring(1,champ.length).toLowerCase(); //First Letter UpperCase
-            champ = champ.replace(/_(.)/g,function (m) {return ' ' + m.charAt(1).toUpperCase()}); //Replace '_l' with ' L'
+            champ = champ.charAt(0) + champ.substring(1, champ.length).toLowerCase(); //First Letter UpperCase
+            champ = champ.replace(/_(.)/g, function (m) { return ' ' + m.charAt(1).toUpperCase() }); //Replace '_l' with ' L'
 
-            let pl = await api.Summoner.getByName(par.summonerName, 'EUW1').catch(error => {
-                ws.send('ERROR');
+            let pl = await api.Summoner.getByName(par.summonerName, 'EUW1').catch(_ => {
+                ws.send('ERROR: Name not found');
                 return;
             });;
-            let px = await api.League.bySummoner(par.summonerId, 'EUW1').catch(error => {
-                ws.send('ERROR');
+            let px = await api.League.bySummoner(par.summonerId, 'EUW1').catch(_ => {
+                ws.send('ERROR: Summoner not found');
                 return;
             });;
 
             var rank = 'Unranked';
             if (px.response[0] != undefined) {
-                rank = px.response[0].tier.charAt(0) + px.response[0].tier.substring(1,px.response[0].tier.length).toLowerCase() + ' ' + px.response[0].rank;
+                rank = px.response[0].tier.charAt(0) + px.response[0].tier.substring(1, px.response[0].tier.length).toLowerCase() + ' ' + px.response[0].rank;
             }
 
             Players.push(new Player(par.summonerName, champ, rank, 'lvl ' + pl.response.summonerLevel))
         }
 
-        SavedGames[currentMatch.response.gameId] = Players;
+        let game = [currentMatch.response.gameId, Players, name, gameInfo];
 
-        ws.send(JSON.stringify([currentMatch.response.gameId,Players,name]));
+        SavedGames[currentMatch.response.gameId] = game;
+
+        setTimeout(_ => { //Delete game after 2 hours
+            SavedGames[currentMatch.response.gameId] = undefined;
+        }, 7_200_000)
+
+        ws.send(JSON.stringify(game));
     }
 }
