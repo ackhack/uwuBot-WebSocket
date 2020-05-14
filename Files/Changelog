@@ -1,3 +1,6 @@
+2.2.1: 15.05.2020
+    -Added timestamp to log
+
 2.2.0: 02.05.2020
     -Added gameInfo to LeagueAPI
     -Implemented SavedGames in LeagueAPI
