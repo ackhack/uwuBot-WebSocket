@@ -6,7 +6,7 @@ const commands = requireDir('./API-Calls');
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
         let date = new Date();
-        let formatted ="[" + date.getDate() + "." + date.getMonth() + ":" + date.getHours() + "." + date.getMinutes() + "." + date.getSeconds() + "] "
+        let formatted ="[" + date.getDate() + "." + date.getMonth() + " | " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "] "
         console.log(formatted + message);
 
         let contentArgs = message.split(" "); //Split Message for simpler Access
