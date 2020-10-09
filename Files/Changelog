@@ -1,3 +1,6 @@
+2.3.1: 09.10.2020
+    -Removed ErrorMessage in LeagueAPI
+
 2.3.0: 21.07.2020
     -Added run.bat
 
