@@ -1,6 +1,7 @@
-const { LolApi } = require('twisted');
+const twisted = require('twisted');
 const fs = require('fs');
 const KEYFILE = '../Dependencies/RiotAPIKey.json';
+let valid = false;
 let league_api = undefined;
 let gameModes = undefined;
 let maps = undefined;
@@ -9,21 +10,24 @@ let SavedGames = {};
 module.exports = {
     LeagueAPI: async function (ws, args) {
 
-        if (league_api === undefined) {
+        ws.send('ERROR: League API is out of date.');
+        return;
+
+        if (!valid) {
             ws.send('ERROR: League API is not available.');
             return;
         }
 
         let name = args.substring(args.indexOf(' ') + 1);
 
-        await api.Summoner.getByName(name, 'EUW1').catch(_ => {
+        await league_api.Summoner.getByName(name, 'EUW1').catch(_ => {
             ws.send('ERROR: Summoner not found');
         }).then(async user => {
 
             if (!user)
                 return;
 
-            await api.Spectator.activeGame(user.response.id, 'EUW1').catch(_ => {
+            await league_api.Spectator.activeGame(user.response.id, 'EUW1').catch(_ => {
                 ws.send('ERROR: No active Game');
             }).then(async currentMatch => {
 
@@ -59,11 +63,11 @@ module.exports = {
                     champ = champ.charAt(0) + champ.substring(1, champ.length).toLowerCase(); //First Letter UpperCase
                     champ = champ.replace(/_(.)/g, function (m) { return ' ' + m.charAt(1).toUpperCase() }); //Replace '_l' with ' L'
 
-                    let pl = await api.Summoner.getByName(par.summonerName, 'EUW1').catch(_ => {
+                    let pl = await league_api.Summoner.getByName(par.summonerName, 'EUW1').catch(_ => {
                         ws.send('ERROR: Name not found');
                         return;
                     });;
-                    let px = await api.League.bySummoner(par.summonerId, 'EUW1').catch(_ => {
+                    let px = await league_api.League.bySummoner(par.summonerId, 'EUW1').catch(_ => {
                         ws.send('ERROR: Summoner not found');
                         return;
                     });;
@@ -94,15 +98,24 @@ module.exports = {
 init();
 
 function init() {
-    if (fs.existsSync(KEYFILE)) {
-        league_api = new LolApi({
+    if (!fs.existsSync(KEYFILE.slice(1))) return;
+
+    let keyFile = require(KEYFILE);
+    if (keyFile.key == "" || keyFile.key == undefined) return;
+
+    try {
+        league_api = new twisted.LolApi({
             rateLimitRetry: true,
             rateLimitRetryAttempts: 1,
             concurrency: undefined,
-            key: require(KEYFILE).key,
+            key: keyFile.key,
         });
         gameModes = require('../Files/gameModes.json');
         maps = require('../Files/maps.json');
+        console.log("League API is ready");
+        valid = true;
+    } catch (err) {
+        console.log(err);
     }
 }
 

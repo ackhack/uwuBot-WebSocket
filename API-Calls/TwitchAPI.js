@@ -1,11 +1,15 @@
 const API = require('twitch-api-v5');
 const fs = require('fs');
 const KEYFILE = '../Dependencies/TwitchID.json';
+let valid = false;
 
 module.exports = {
     TwitchAPI: function (ws, args) {
 
-        if (API.clientID === undefined) {
+        ws.send('ERROR: Twitch API is out of date.');
+        return;
+
+        if (!valid) {
             ws.send('ERROR: Twitch API is not available.');
             return;
         }
@@ -17,6 +21,7 @@ module.exports = {
                 console.log(err);
                 ws.send('Offline ' + contentArgs[1]);
             } else {
+                console.log(res);
 
                 API.streams.live({ channel: res.users[0]._id }, (err1, res) => {
 
@@ -40,7 +45,16 @@ module.exports = {
 init();
 
 function init() {
-    if (fs.existsSync(KEYFILE)) {
-        API.clientID = require(KEYFILE).key;
+    if (!fs.existsSync(KEYFILE.slice(1))) return;
+
+    let keyFile = require(KEYFILE);
+    if (keyFile.key == "" || keyFile.key == undefined) return;
+
+    try {
+        API.clientID = keyFile.key;
+        console.log("Twitch API is ready");
+        valid = true;
+    } catch (err) {
+        console.log(err);
     }
 }
