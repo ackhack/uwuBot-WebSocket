@@ -28,7 +28,7 @@ module.exports = {
 
                         ws.send(JSON.stringify([scores, AccArray]));
                     }).catch((error) => {
-                        ws.send('ERROR');
+                        ws.send('ERROR: User not found or has no top plays.');
                         console.log(error);
                     });
                 break;
@@ -39,7 +39,7 @@ module.exports = {
                         ws.send(JSON.stringify([result[0], parseMods(result[0].mods), result[0].accuracy]));
                     }
                 ).catch((error) => {
-                    ws.send('ERROR');
+                    ws.send('ERROR: User not found or has no recent plays.');
                     console.log(error);
                 });
                 break;
