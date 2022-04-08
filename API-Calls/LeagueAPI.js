@@ -1,5 +1,4 @@
 const twisted = require('twisted');
-const fs = require('fs');
 const KEYFILE = '../Dependencies/RiotAPIKey.json';
 let valid = false;
 let league_api = undefined;
@@ -98,12 +97,10 @@ module.exports = {
 init();
 
 function init() {
-    if (!fs.existsSync(KEYFILE.slice(1))) return;
-
-    let keyFile = require(KEYFILE);
-    if (keyFile.key == "" || keyFile.key == undefined) return;
-
     try {
+        let keyFile = require(KEYFILE);
+        if (keyFile.key == "" || keyFile.key == undefined) return;
+
         league_api = new twisted.LolApi({
             rateLimitRetry: true,
             rateLimitRetryAttempts: 1,

@@ -1,5 +1,4 @@
 const snoowrap = require('snoowrap');
-const fs = require('fs');
 const KEYFILE = '../Dependencies/RedditAPI.json';
 let valid = false;
 let reddit_api = undefined;
@@ -27,28 +26,13 @@ module.exports = {
 init();
 
 function init() {
-    if (fs.existsSync(KEYFILE)) {
-        let apiKey = require(KEYFILE);
-        reddit_api = new snoowrap({
-            userAgent: 'my user-agent',
-            clientId: apiKey.clientId,
-            clientSecret: apiKey.clientSecret,
-            username: apiKey.username,
-            password: apiKey.password
-        });
-    }
-}
-
-function init() {
-    if (!fs.existsSync(KEYFILE.slice(1))) return;
-
-    let keyFile = require(KEYFILE);
-    if (keyFile.clientId == "" || keyFile.clientId == undefined) return;
-    if (keyFile.clientSecret == "" || keyFile.clientSecret == undefined) return;
-    if (keyFile.username == "" || keyFile.username == undefined) return;
-    if (keyFile.password == "" || keyFile.password == undefined) return;
-
     try {
+        let keyFile = require(KEYFILE);
+        if (keyFile.clientId == "" || keyFile.clientId == undefined) return;
+        if (keyFile.clientSecret == "" || keyFile.clientSecret == undefined) return;
+        if (keyFile.username == "" || keyFile.username == undefined) return;
+        if (keyFile.password == "" || keyFile.password == undefined) return;
+
         reddit_api = new snoowrap({
             userAgent: 'my user-agent',
             clientId: keyFile.clientId,

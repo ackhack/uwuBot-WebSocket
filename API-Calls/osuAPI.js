@@ -1,5 +1,4 @@
 const { Api } = require('node-osu');
-const fs = require('fs');
 const KEYFILE = '../Dependencies/osuAPIKey.json';
 let valid = false;
 let osu_api = undefined;
@@ -63,12 +62,10 @@ function parseMods(mods) {
 init();
 
 function init() {
-    if (!fs.existsSync(KEYFILE.slice(1))) return;
-
-    let keyFile = require(KEYFILE);
-    if (keyFile.key == "" || keyFile.key == undefined) return;
-
     try {
+        let keyFile = require(KEYFILE);
+        if (keyFile.key == "" || keyFile.key == undefined) return;
+
         osu_api = new Api(keyFile.key, {
             // baseUrl: sets the base api url (default: https://osu.ppy.sh/api)
             notFoundAsError: true, // Throw an error on not found instead of returning nothing. (default: true)

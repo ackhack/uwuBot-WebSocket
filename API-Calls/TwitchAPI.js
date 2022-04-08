@@ -1,5 +1,4 @@
 const API = require('twitch-api-v5');
-const fs = require('fs');
 const KEYFILE = '../Dependencies/TwitchID.json';
 let valid = false;
 
@@ -45,12 +44,10 @@ module.exports = {
 init();
 
 function init() {
-    if (!fs.existsSync(KEYFILE.slice(1))) return;
-
-    let keyFile = require(KEYFILE);
-    if (keyFile.key == "" || keyFile.key == undefined) return;
-
     try {
+        let keyFile = require(KEYFILE);
+        if (keyFile.key == "" || keyFile.key == undefined) return;
+
         API.clientID = keyFile.key;
         console.log("Twitch API is ready");
         valid = true;
