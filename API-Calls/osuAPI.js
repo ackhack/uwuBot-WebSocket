@@ -40,7 +40,8 @@ init();
 async function init() {
     try {
         let keyFile = require(KEYFILE);
-        if (keyFile.key == "" || keyFile.key == undefined) return;
+        if (keyFile.id == "" || keyFile.id == undefined) return;
+        if (keyFile.secret == "" || keyFile.secret == undefined) return;
         await auth.login(keyFile.id, keyFile.secret);
 
         console.log("osu! API is ready");
