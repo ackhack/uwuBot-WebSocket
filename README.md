@@ -1,2 +1,1 @@
-node modules:
-node-osu twisted snoowrap discord.js require-dir twitch-api-v5
+The WebSocket for uwu-botv2
