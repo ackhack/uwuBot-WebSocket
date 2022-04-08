@@ -1,14 +1,15 @@
-const osu = require('node-osu');
-const osuAPIKey = require('../Dependencies/osuAPIKey.json'); //Has APIKey under osuAPIKEY.key
-const osuAPI = new osu.Api(osuAPIKey.key, {
-    // baseUrl: sets the base api url (default: https://osu.ppy.sh/api)
-    notFoundAsError: true, // Throw an error on not found instead of returning nothing. (default: true)
-    completeScores: true, // When fetching scores also fetch the beatmap they are for (Allows getting accuracy) (default: false)
-    parseNumeric: false // Parse numeric values into numbers/floats, excluding ids
-});
+const { Api } = require('node-osu');
+const fs = require('fs');
+const KEYFILE = '../Dependencies/osuAPIKey.json';
+let osu_api = undefined;
 
 module.exports = {
     osuAPI: function (ws, args) {
+
+        if (osu_api === undefined) {
+            ws.send('ERROR: osu! API is not available.');
+            return;
+        }
 
         let contentArgs = args.split(" "); //Split Message for simpler Access
         let name = args.substring(args.indexOf(' ') + 1);
@@ -56,4 +57,17 @@ function parseMods(mods) {
 
     result = result.substring(0, result.length - 1);
     return result;
+}
+
+init();
+
+function init() {
+    if (fs.existsSync(KEYFILE)) {
+        osu_api = new Api(require(KEYFILE).key, {
+            // baseUrl: sets the base api url (default: https://osu.ppy.sh/api)
+            notFoundAsError: true, // Throw an error on not found instead of returning nothing. (default: true)
+            completeScores: true, // When fetching scores also fetch the beatmap they are for (Allows getting accuracy) (default: false)
+            parseNumeric: false // Parse numeric values into numbers/floats, excluding ids
+        });
+    }
 }

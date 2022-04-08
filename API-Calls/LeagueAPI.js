@@ -1,26 +1,18 @@
-const RiotAPIKey = require('../Dependencies/RiotAPIKey.json'); //Has RiotAPIKey under RiotAPIKey.key
-const twisted = require('twisted');
-const api = new twisted.LolApi({
-    rateLimitRetry: true,
-    rateLimitRetryAttempts: 1,
-    concurrency: undefined,
-    key: RiotAPIKey.key,
-});
-const gameModes = require('../Files/gameModes.json');
-const maps = require('../Files/maps.json');
-var SavedGames = {};
-
-class Player {
-    constructor(name, champion, rank, playerlevel) {
-        this.name = name;
-        this.champion = champion;
-        this.rank = rank;
-        this.playerlevel = playerlevel;
-    }
-}
+const { LolApi } = require('twisted');
+const fs = require('fs');
+const KEYFILE = '../Dependencies/RiotAPIKey.json';
+let league_api = undefined;
+let gameModes = undefined;
+let maps = undefined;
+let SavedGames = {};
 
 module.exports = {
     LeagueAPI: async function (ws, args) {
+
+        if (league_api === undefined) {
+            ws.send('ERROR: League API is not available.');
+            return;
+        }
 
         let name = args.substring(args.indexOf(' ') + 1);
 
@@ -95,5 +87,30 @@ module.exports = {
                 ws.send(JSON.stringify(game));
             });
         });
+    }
+}
+
+
+init();
+
+function init() {
+    if (fs.existsSync(KEYFILE)) {
+        league_api = new LolApi({
+            rateLimitRetry: true,
+            rateLimitRetryAttempts: 1,
+            concurrency: undefined,
+            key: require(KEYFILE).key,
+        });
+        gameModes = require('../Files/gameModes.json');
+        maps = require('../Files/maps.json');
+    }
+}
+
+class Player {
+    constructor(name, champion, rank, playerlevel) {
+        this.name = name;
+        this.champion = champion;
+        this.rank = rank;
+        this.playerlevel = playerlevel;
     }
 }
