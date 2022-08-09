@@ -1,4 +1,3 @@
-const { VoiceState } = require('discord.js');
 const { v2, auth } = require('osu-api-extended')
 const KEYFILE = '../Dependencies/osuAPIKey.json';
 let valid = false;

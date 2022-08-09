@@ -1,6 +1,6 @@
 {
   "name": "uwubot-websocket",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/ackhack/uwuBot-WebSocket#readme",
   "dependencies": {
-    "discord.js": "^12.0.2",
     "osu-api-extended": "^2.1.4",
     "require-dir": "^1.2.0",
     "snoowrap": "^1.21.0",
